@@ -32,5 +32,10 @@ public class CustomerController {
     }
 
 
-
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public CustomerResponse getCustomersById(@PathParam("id") Long id) {
+        return customerService.findCustomersById(id);
+    }
 }

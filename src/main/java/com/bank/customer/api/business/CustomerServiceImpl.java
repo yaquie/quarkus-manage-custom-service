@@ -26,24 +26,11 @@ public class CustomerServiceImpl implements  CustomerService{
     }
 
     @Transactional
-    public CustomerResponse createTest(CustomerRequest request){
-        Customer customer = new Customer();
-        customer.setId(3L);
-        customer.setDocumentNumber("12345678");
-        customer.setEmail("alarconexample@gmail.com");
-        customer.setStatus("ACTIVE");
-        customer.persist();
-        return null;
-    }
-
-    @Transactional
     public CustomerResponse create(CustomerRequest request) throws Exception {
-        // Validar duplicados
         if (customerRepository.existsByDocumentNumber(request.getDocumentNumber())) {
             System.out.println("Document already exists");
             throw new BusinessException(ManageExeption.SE00001);
         }
-
 
         Customer customer = new Customer();
         customer.setName(request.getName());
@@ -63,13 +50,22 @@ public class CustomerServiceImpl implements  CustomerService{
         return response;
     }
 
+    @Override
+    public CustomerResponse findCustomersById(Long id) {
+        Customer custo = customerRepository.findById(id);
 
-    public Customer findById(Long id) {
-        return Customer.findById(id);
+        if (custo == null) {
+            throw new BusinessException(ManageExeption.SE00002);
+        }
+
+        CustomerResponse response = new CustomerResponse();
+        response.setId(custo.getId());
+        response.setName(custo.getName());
+        response.setDocumentNumber(custo.getDocumentNumber());
+        response.setEmail(custo.getEmail());
+        response.setStatus("ACTIVE");
+        return response;
     }
 
-    public Customer findByDocument(String document) {
-        return Customer.find("documentNumber", document).firstResult();
-    }
 
 }

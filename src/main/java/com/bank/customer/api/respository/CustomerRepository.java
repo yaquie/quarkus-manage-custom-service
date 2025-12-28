@@ -15,10 +15,6 @@ public class CustomerRepository implements PanacheRepository<Customer> {
         return find("documentNumber", documentNumber).firstResultOptional();
     }
 
-    public List<Customer> findActiveCustomers() {
-        return list("status", CustomerStatus.ACTIVE);
-    }
-
     public boolean existsByDocumentNumber(String documentNumber) {
         return count("documentNumber", documentNumber) > 0;
     }

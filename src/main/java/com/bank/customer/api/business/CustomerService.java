@@ -11,4 +11,5 @@ import java.util.List;
 public interface CustomerService {
     public List<Customer> getAllCustomers();
     public CustomerResponse create(CustomerRequest request) throws Exception;
+    public CustomerResponse findCustomersById(Long id);
 }
