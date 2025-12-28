@@ -1,35 +1,75 @@
 package com.bank.customer.api.business;
 
 import com.bank.customer.api.domain.Customer;
-import com.bank.customer.api.util.CustomerStatus;
+import com.bank.customer.api.domain.dto.CustomerRequest;
+import com.bank.customer.api.domain.dto.CustomerResponse;
+import com.bank.customer.api.respository.CustomerRepository;
+import com.bank.customer.api.util.BusinessException;
+import com.bank.customer.api.util.ManageExeption;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 @ApplicationScoped
 public class CustomerServiceImpl implements  CustomerService{
 
+    @Inject
+    CustomerRepository customerRepository;
+
     @Override
     public List<Customer> getAllCustomers() {
-        List<Customer> customers = new ArrayList<>();
-        Customer c = new Customer();
-        c.setId(1L);
-        c.setName("Jakie Alarcon");
-        c.setDocumentNumber("71659305");
-        c.setEmail("jakie@gmail.com");
-        c.setStatus(String.valueOf(CustomerStatus.ACTIVE));
-
-        Customer c2 = new Customer();
-        c2.setId(2L);
-        c2.setName("Xiomara Romani");
-        c2.setDocumentNumber("71659317");
-        c2.setEmail("xiomi@gmail.com");
-        c2.setStatus(String.valueOf(CustomerStatus.ACTIVE));
-
-        //return List.of(c);
-        customers.add(c);
-        customers.add(c2);
-        return customers;
+        System.out.println("getAllCustomers: " + customerRepository.findAll().stream().count());
+       return customerRepository.findAll().stream().toList();
     }
+
+    @Transactional
+    public CustomerResponse createTest(CustomerRequest request){
+        Customer customer = new Customer();
+        customer.setId(3L);
+        customer.setDocumentNumber("12345678");
+        customer.setEmail("alarconexample@gmail.com");
+        customer.setStatus("ACTIVE");
+        customer.persist();
+        return null;
+    }
+
+    @Transactional
+    public CustomerResponse create(CustomerRequest request) throws Exception {
+        // Validar duplicados
+        if (customerRepository.existsByDocumentNumber(request.getDocumentNumber())) {
+            System.out.println("Document already exists");
+            throw new BusinessException(ManageExeption.SE00001);
+        }
+
+
+        Customer customer = new Customer();
+        customer.setName(request.getName());
+        customer.setDocumentNumber(request.getDocumentNumber());
+        customer.setEmail(request.getEmail());
+        customer.setStatus("ACTIVE");
+
+        customerRepository.persist(customer);
+        System.out.println("Customer created" );
+
+        CustomerResponse response = new CustomerResponse();
+        response.setId(customer.getId());
+        response.setName(customer.getName());
+        response.setDocumentNumber(customer.getDocumentNumber());
+        response.setEmail(customer.getEmail());
+
+        return response;
+    }
+
+
+    public Customer findById(Long id) {
+        return Customer.findById(id);
+    }
+
+    public Customer findByDocument(String document) {
+        return Customer.find("documentNumber", document).firstResult();
+    }
+
 }

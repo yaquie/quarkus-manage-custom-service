@@ -1,27 +1,14 @@
-package com.bank.customer.api.domain;
+package com.bank.customer.api.domain.dto;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+public class CustomerResponse {
 
-
-@Entity
-public class Customer  extends PanacheEntityBase {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank
     private String name;
-    @NotBlank
-    @Column(unique = true)
     private String documentNumber;
-    @NotBlank
     private String email;
-    @NotBlank
     private String status;
 
-    public Customer() {}
+    public CustomerResponse() {}
 
     public Long getId() {
         return id;
