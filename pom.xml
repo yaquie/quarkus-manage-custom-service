@@ -43,11 +43,15 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
-        <!-- Base de Datos H2 -->
-        <!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-jdbc-h2 -->
+        <!-- Base de Datos Mysql -->
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-jdbc-h2</artifactId>
+            <artifactId>quarkus-jdbc-mysql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-openapi</artifactId>
         </dependency>
 
         <!-- Bean Validation -->
